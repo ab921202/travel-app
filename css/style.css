@@ -644,11 +644,19 @@ html, body {
 .tl-card:active { transform: scale(.98); box-shadow: var(--shadow-md); }
 
 .tl-card.is-transport {
-  background: rgba(244,239,230,.65);
+  background: transparent;
   box-shadow: none;
-  border: 1px solid rgba(28,28,46,.07);
+  padding: 0;
+  border-radius: 0;
   cursor: default;
-  padding-left: 14px;
+}
+.tl-card.is-transport:active { transform: none; box-shadow: none; }
+
+.tl-card.is-clickable {
+  cursor: pointer !important;
+}
+.tl-card.is-transport.is-clickable:active {
+  transform: scale(.98);
 }
 
 /* Food recommendation card */

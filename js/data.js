@@ -34,7 +34,7 @@ const DAYS = [
       { type: 'attraction', icon: '🏛️', titleJa: '金沢21世紀美術館', titleZh: '金澤21世紀美術館', desc: '現代藝術與游泳池裝置', spotId: '21c-museum' },
       { type: 'attraction', icon: '🏮', titleJa: 'ひがし茶屋街', titleZh: '東茶屋街', desc: '江戶時代的傳統茶屋建築', spotId: 'higashi-chaya' },
       foodRec('dinner', '金沢駅', '金沢駅 ディナー おすすめ'),
-      { type: 'fixed', time: '20:00', icon: '🏨', titleJa: 'スマイルホテルプレミアム 金沢東口駅前', titleZh: '微笑酒店高級-金澤東口站前', desc: '辦理入住 (Check-in: 14:00~ / Check-out: ~11:00)<br>📍 石川県金沢市堀川新町2-20' }
+      { type: 'fixed', time: '20:00', icon: '🏨', titleJa: 'スマイルホテルプレミアム 金沢東口駅前', titleZh: '微笑酒店高級-金澤東口站前', desc: '辦理入住 (Check-in: 14:00~ / Check-out: ~11:00)<br>📍 石川県金沢市堀川新町2-20', mapQuery: 'スマイルホテルプレミアム 金沢東口駅前' }
     ]
   },
   {
@@ -42,7 +42,7 @@ const DAYS = [
     titleJa: '立山黒部アルペンルート',
     location: '富山 → 立山黒部 → 松本',
     items: [
-      { type: 'fixed', time: '08:30', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: 'スマイルホテルプレミアム 金沢東口駅前' },
+      { type: 'fixed', time: '08:30', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: 'スマイルホテルプレミアム 金沢東口駅前', mapQuery: 'スマイルホテルプレミアム 金沢東口駅前' },
       { type: 'transport', icon: '🚄', titleJa: '金沢駅 → 富山駅', desc: '北陸新幹線' },
       { type: 'transport', icon: '🚂', titleJa: '富山駅 → 立山駅', desc: '富山地方鉄道' },
       { type: 'attraction', icon: '⛰️', titleJa: '室堂', titleZh: '室堂平', desc: '立山黑部最高點 (2450m)', spotId: 'murodo' },
@@ -50,7 +50,7 @@ const DAYS = [
       { type: 'attraction', icon: '🌊', titleJa: '黒部ダム', titleZh: '黑部水壩', desc: '日本最高的水壩', spotId: 'kurobe-dam' },
       { type: 'transport', icon: '🚌', titleJa: '扇沢 → 信濃大町 → 松本', desc: '路線巴士與JR大糸線' },
       foodRec('dinner', '松本駅', '松本駅 ディナー おすすめ'),
-      { type: 'fixed', time: '20:00', icon: '🏨', titleJa: 'ホテル飯田屋', titleZh: '松本飯田屋飯店', desc: '辦理入住 (Check-in: 15:00~ / Check-out: ~10:00)<br>📍 長野県松本市中央1丁目2-3 2F' }
+      { type: 'fixed', time: '20:00', icon: '🏨', titleJa: 'ホテル飯田屋', titleZh: '松本飯田屋飯店', desc: '辦理入住 (Check-in: 15:00~ / Check-out: ~10:00)<br>📍 長野県松本市中央1丁目2-3 2F', mapQuery: 'ホテル飯田屋' }
     ]
   },
   {
@@ -58,14 +58,14 @@ const DAYS = [
     titleJa: '上高地と奥飛騨の絶景',
     location: '松本 → 上高地 → 新穂高 → 名古屋',
     items: [
-      { type: 'fixed', time: '08:00', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: 'ホテル飯田屋' },
+      { type: 'fixed', time: '08:00', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: 'ホテル飯田屋', mapQuery: 'ホテル飯田屋' },
       { type: 'transport', icon: '🚌', titleJa: '松本バスターミナル → 上高地', desc: '直達巴士' },
       { type: 'attraction', icon: '🌲', titleJa: '上高地 (大正池〜河童橋)', titleZh: '上高地健行', desc: '日本阿爾卑斯的絕美秘境', spotId: 'kamikochi' },
       { type: 'transport', icon: '🚌', titleJa: '上高地 → 平湯温泉 → 新穂高', desc: '濃飛巴士' },
       { type: 'attraction', icon: '🚠', titleJa: '新穂高ロープウェイ', titleZh: '新穗高纜車', desc: '雙層纜車登上標高2156m的雲上世界', spotId: 'shinhotaka' },
       { type: 'transport', icon: '🚌', titleJa: '新穂高 → 高山 → 名古屋', desc: '巴士與JR特急' },
       foodRec('dinner', '名古屋駅', '名古屋駅 ディナー おすすめ'),
-      { type: 'fixed', time: '20:30', icon: '🏨', titleJa: '変なホテルプレミア名古屋 伏見駅前', titleZh: '海茵娜飯店 頂級 名古屋伏見站前', desc: '辦理入住 (連住三晚)<br>Check-in: 15:00~ / Check-out: ~11:00<br>📍 愛知県名古屋市中区錦1丁目10-10' }
+      { type: 'fixed', time: '20:30', icon: '🏨', titleJa: '変なホテルプレミア名古屋 伏見駅前', titleZh: '海茵娜飯店 頂級 名古屋伏見站前', desc: '辦理入住 (連住三晚)<br>Check-in: 15:00~ / Check-out: ~11:00<br>📍 愛知県名古屋市中区錦1丁目10-10', mapQuery: '変なホテルプレミア名古屋 伏見駅前' }
     ]
   },
   {
@@ -98,7 +98,7 @@ const DAYS = [
     titleJa: '帰国の途',
     location: '名古屋 → 中部国際空港 → 台湾',
     items: [
-      { type: 'fixed', time: '09:00', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: '変なホテルプレミア名古屋 伏見駅前' },
+      { type: 'fixed', time: '09:00', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: '変なホテルプレミア名古屋 伏見駅前', mapQuery: '変なホテルプレミア名古屋 伏見駅前' },
       { type: 'transport', icon: '🚆', titleJa: '名鉄ミュースカイ', desc: '名古屋駅 → 中部国際空港 (約28分)' },
       { type: 'attraction', icon: '🛫', titleJa: '中部国際空港 セントレア', titleZh: '中部國際機場', desc: '機場免稅店最後採購' },
       { type: 'food', icon: '🍤', titleJa: 'まるや本店 (ひつまぶし)', titleZh: '鰻魚飯三吃', desc: '機場內品嚐名古屋名物', spotId: 'hitsumabushi' },

@@ -425,14 +425,17 @@ function renderDayDetail(idx) {
 
 function buildTimelineCard(item, color) {
   const card      = document.createElement('div');
-  const hasDetail = !!item.spotId;
-  const isStatic  = (item.type === 'transport' || item.type === 'fixed');
+  const hasDetail   = !!item.spotId;
+  const hasMapQuery = !!item.mapQuery;
+  const isClickable = hasDetail || hasMapQuery;
+  const isStatic    = (item.type === 'transport' || item.type === 'fixed');
 
   let cls = 'tl-card';
   if (isStatic)                   cls += ' is-transport';
   if (item.type === 'food')       cls += ' is-food';
   if (item.type === 'attraction') cls += ' is-attraction';
   if (item.type === 'experience') cls += ' is-experience';
+  if (isClickable)                cls += ' is-clickable';
   card.className = cls;
 
   if (!isStatic) {
@@ -451,12 +454,23 @@ function buildTimelineCard(item, color) {
                       item.type === 'experience' ? '體驗介紹' : '景點介紹';
     html += `<div class="tl-card-chip ${chipClass}">${chipText}</div>`;
     html += `<div class="tl-card-tap-hint">›</div>`;
+  } else if (hasMapQuery) {
+    html += `<div class="tl-card-chip" style="background:rgba(0,122,255,0.08); color:#007aff;">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px; vertical-align:-1px;">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>開啟地圖</div>`;
+    html += `<div class="tl-card-tap-hint">›</div>`;
   }
 
   card.innerHTML = html;
 
   if (hasDetail) {
     card.addEventListener('click', () => openSpotModal(item.spotId, color));
+  } else if (hasMapQuery) {
+    card.addEventListener('click', () => {
+      const url = `https://www.google.com/maps/search/${encodeURIComponent(item.mapQuery)}`;
+      window.open(url, '_blank', 'noopener');
+    });
   }
   return card;
 }
