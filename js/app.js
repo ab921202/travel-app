@@ -220,8 +220,8 @@ function routeMapSVG() {
   <rect x="0" y="0" width="4" height="950" fill="${C[0]}" opacity="0.25"/>
 
   <!-- ══ TAIWAN (start) ══ -->
-  <text x="148" y="32" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
-  <text x="164" y="32" font-size="11" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場出發</text>
+  <text x="${SX}" y="32" text-anchor="middle" font-size="20" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
+  <text x="${LX}" y="28" font-size="13" fill="#8a8a8a" font-weight="600" font-family="Noto Sans TC, sans-serif">桃園國際機場 出發</text>
 
   <!-- Flight dashed line down -->
   ${vline(38, 78, '#bbb', '4 3')}
