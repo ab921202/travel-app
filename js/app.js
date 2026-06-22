@@ -231,7 +231,7 @@ function routeMapSVG() {
   ${stop(90, C[0], 5.5, '小松空港', null, 'Day 1 · 7/31', 'small')}
   ${vline(96, 148, C[0])}
 
-  ${stop(160, C[0], 9, '金沢', '兼六園 · 近江町 · 東茶屋街 · 21美', 'Day 1', 'star')}
+  ${stop(160, C[0], 9, '金沢', '兼六園 · 近江町 · 東茶屋街 · 21美', null, 'star')}
 
   <!-- ══ DAY 2 ══ -->
   ${vline(176, 218, C[1], '5 3')}
@@ -276,8 +276,8 @@ function routeMapSVG() {
   <text x="${SX+10}" y="778" font-size="10" fill="#b0b0b0" font-family="Noto Sans TC, sans-serif">✈ 台灣虎航 2h</text>
 
   <!-- ══ TAIWAN (end) ══ -->
-  <text x="148" y="832" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
-  <text x="164" y="832" font-size="11" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場抵達</text>
+  <text x="${SX}" y="832" text-anchor="middle" font-size="20" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
+  <text x="${LX}" y="828" font-size="13" fill="#8a8a8a" font-weight="600" font-family="Noto Sans TC, sans-serif">桃園國際機場 抵達</text>
 
   <!-- Bottom padding -->
   <rect x="0" y="858" width="320" height="92" fill="#f4efe6"/>
