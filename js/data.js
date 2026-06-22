@@ -86,9 +86,6 @@ const DAYS = [
     titleJa: 'テーマパークの旅',
     location: '名古屋近郊',
     items: [
-      { type: 'transport', icon: '🚇', titleJa: 'リニモ', desc: '磁浮列車前往愛・地球博記念公園' },
-      { type: 'attraction', icon: '🌳', titleJa: 'ジブリパーク', titleZh: '吉卜力公園', desc: '吉卜力動畫的真實世界', spotId: 'ghibli' },
-      foodRec('lunch', 'ジブリパーク', 'ジブリパーク ランチ'),
       { type: 'attraction', icon: '🚄', titleJa: 'リニア・鉄道館', titleZh: '磁浮鐵道館', desc: '東海道新幹線與超導磁浮列車展示', spotId: 'scmaglev' },
       foodRec('dinner', '名古屋駅', '名古屋駅 名物 ディナー')
     ]
@@ -99,7 +96,10 @@ const DAYS = [
     location: '名古屋 → 中部国際空港 → 台湾',
     items: [
       { type: 'fixed', time: '09:00', icon: '🏨', titleJa: 'チェックアウト', titleZh: '飯店退房', desc: '変なホテルプレミア名古屋 伏見駅前', mapQuery: '変なホテルプレミア名古屋 伏見駅前' },
-      { type: 'transport', icon: '🚆', titleJa: '名鉄ミュースカイ', desc: '名古屋駅 → 中部国際空港 (約28分)' },
+      { type: 'transport', icon: '🚇', titleJa: 'リニモ', desc: '磁浮列車前往愛・地球博記念公園' },
+      { type: 'attraction', icon: '🌳', titleJa: 'ジブリパーク', titleZh: '吉卜力公園', desc: '吉卜力動畫的真實世界', spotId: 'ghibli' },
+      foodRec('lunch', 'ジブリパーク', 'ジブリパーク ランチ'),
+      { type: 'transport', icon: '🚆', titleJa: '名鉄ミュースカイ', desc: '名古屋駅 → 中部国際空港' },
       { type: 'attraction', icon: '🛫', titleJa: '中部国際空港 セントレア', titleZh: '中部國際機場', desc: '機場免稅店最後採購' },
       { type: 'food', icon: '🍤', titleJa: 'まるや本店 (ひつまぶし)', titleZh: '鰻魚飯三吃', desc: '機場內品嚐名古屋名物', spotId: 'hitsumabushi' },
       { type: 'fixed', time: '13:00 – 15:10', icon: '✈️', titleJa: '中部国際空港 → 桃園国際空港', desc: '台灣虎航 搭乘固定班機' }
