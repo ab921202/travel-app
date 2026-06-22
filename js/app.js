@@ -7,10 +7,9 @@
 let currentDayIndex  = null;
 let currentColor     = DAY_COLORS[0];
 let currentWeatherUrl = '';
-let currentTab       = 'map';
 
 /* ── DOM refs ───────────────────────────────────── */
-const viewCover     = document.getElementById('view-cover');
+const viewHome      = document.getElementById('view-home');
 const viewMain      = document.getElementById('view-main');
 const viewDayDetail = document.getElementById('view-day-detail');
 const dayList       = document.getElementById('day-list');
@@ -77,13 +76,34 @@ const modalContent  = document.getElementById('modal-content');
 /* ══════════════════════════════════════════════════
    VIEW NAVIGATION
 ══════════════════════════════════════════════════ */
-function showMain() {
-  viewCover.classList.remove('active');
-  viewDayDetail.classList.remove('active');
-  viewMain.classList.remove('prev');
-  viewMain.classList.add('active');
+
+/* Scroll to map section within the home view */
+function scrollToMap() {
+  const mapSection = document.getElementById('map-section');
+  mapSection.scrollIntoView({ behavior: 'smooth' });
 }
 
+/* Show home (cover+map) view */
+function showHome() {
+  viewDayDetail.classList.remove('active');
+  viewMain.classList.remove('active');
+  viewMain.classList.remove('prev');
+  viewHome.classList.remove('prev');
+  viewHome.classList.add('active');
+  updateTabBar('map');
+}
+
+/* Show itinerary list view */
+function showItinerary() {
+  viewDayDetail.classList.remove('active');
+  viewHome.classList.remove('active');
+  viewHome.classList.add('prev');
+  viewMain.classList.remove('prev');
+  viewMain.classList.add('active');
+  updateTabBar('itinerary');
+}
+
+/* Show day detail */
 function showDayDetail(idx) {
   currentDayIndex = idx;
   currentColor    = DAY_COLORS[idx];
@@ -94,165 +114,150 @@ function showDayDetail(idx) {
   viewDayDetail.classList.add('active');
 }
 
-/* Back from day detail → restore last tab */
-document.getElementById('back-btn').addEventListener('click', showMain);
+/* Back from day detail → restore itinerary list */
+document.getElementById('back-btn').addEventListener('click', showItinerary);
 
-
-/* ══════════════════════════════════════════════════
-   TAB SWITCHING
-══════════════════════════════════════════════════ */
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-bar-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`tab-${tab}`).classList.add('active');
-  document.getElementById(`tabbtn-${tab}`).classList.add('active');
-
-  /* Lazy-build route map on first show */
-  if (tab === 'map') buildRouteMap();
+function updateTabBar(active) {
+  document.getElementById('tabbtn-map').classList.toggle('active', active === 'map');
+  document.getElementById('tabbtn-itinerary').classList.toggle('active', active === 'itinerary');
 }
 
+/* Legacy: keep showMain pointing to home */
+function showMain() { showHome(); }
+
 
 /* ══════════════════════════════════════════════════
-   ROUTE MAP  (SVG route diagram)
+   ROUTE MAP  (SVG — straight vertical spine only)
 ══════════════════════════════════════════════════ */
-let routeMapBuilt = false;
 function buildRouteMap() {
-  if (routeMapBuilt) return;
-  routeMapBuilt = true;
   const container = document.getElementById('route-map-svg-container');
+  if (container.children.length > 0) return;
   container.innerHTML = routeMapSVG();
 }
 
 function routeMapSVG() {
   const C = DAY_COLORS;
-  const SX = 58;   /* Main spine x */
-  const LX = 76;   /* Label x */
+  const SX = 52;   /* Main spine x */
+  const LX = 72;   /* Label x */
 
-  /* Helper: station row */
-  function stop(x, y, color, size, label, sub, day, nodeType) {
+  /* Helper: station stop */
+  function stop(y, color, size, label, sub, day, nodeType) {
     let node = '';
     if (nodeType === 'star') {
-      node = `<circle cx="${x}" cy="${y}" r="${size + 3}" fill="${color}" opacity=".18"/>
-              <circle cx="${x}" cy="${y}" r="${size}" fill="${color}"/>
-              <circle cx="${x}" cy="${y}" r="${size - 3.5}" fill="white"/>
-              <circle cx="${x}" cy="${y}" r="${size - 7}" fill="${color}"/>`;
+      node = `<circle cx="${SX}" cy="${y}" r="${size + 3}" fill="${color}" opacity=".18"/>
+              <circle cx="${SX}" cy="${y}" r="${size}" fill="${color}"/>
+              <circle cx="${SX}" cy="${y}" r="${size - 3.5}" fill="white"/>
+              <circle cx="${SX}" cy="${y}" r="${size - 7}" fill="${color}"/>`;
     } else if (nodeType === 'small') {
-      node = `<circle cx="${x}" cy="${y}" r="${size}" fill="${color}"/>`;
+      node = `<circle cx="${SX}" cy="${y}" r="${size}" fill="${color}"/>`;
     } else {
-      node = `<circle cx="${x}" cy="${y}" r="${size}" fill="${color}"/>
-              <circle cx="${x}" cy="${y}" r="${size - 2.5}" fill="white"/>
-              <circle cx="${x}" cy="${y}" r="${size - 5}" fill="${color}"/>`;
+      node = `<circle cx="${SX}" cy="${y}" r="${size}" fill="${color}"/>
+              <circle cx="${SX}" cy="${y}" r="${size - 2.5}" fill="white"/>
+              <circle cx="${SX}" cy="${y}" r="${size - 5}" fill="${color}"/>`;
     }
     const subEl = sub
-      ? `<text x="${LX}" y="${y + 16}" font-size="9.5" fill="#9a9a9a" font-family="Noto Sans TC, sans-serif">${sub}</text>`
+      ? `<text x="${LX}" y="${y + 17}" font-size="10" fill="#9a9a9a" font-family="Noto Sans TC, sans-serif">${sub}</text>`
       : '';
     const dayEl = day
-      ? `<rect x="256" y="${y - 10}" width="58" height="17" rx="8.5" fill="${color}" opacity=".9"/>
-         <text x="285" y="${y + 3}" text-anchor="middle" font-size="9" fill="white" font-weight="bold"
+      ? `<rect x="226" y="${y - 10}" width="68" height="18" rx="9" fill="${color}" opacity=".9"/>
+         <text x="260" y="${y + 3.5}" text-anchor="middle" font-size="9.5" fill="white" font-weight="bold"
                font-family="Noto Sans TC, sans-serif">${day}</text>`
       : '';
     return `${node}
-    <text x="${LX}" y="${y + 4}" font-size="13.5" fill="${color}" font-weight="700"
+    <text x="${LX}" y="${y + 5}" font-size="14" fill="${color}" font-weight="700"
           font-family="Noto Serif JP, serif">${label}</text>
     ${subEl}${dayEl}`;
   }
 
   /* Helper: vertical line segment */
-  function vline(x, y1, y2, color, dash = '') {
+  function vline(y1, y2, color, dash = '') {
     const da = dash ? `stroke-dasharray="${dash}"` : '';
-    return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"
-                  stroke="${color}" stroke-width="2.2" ${da}/>`;
+    return `<line x1="${SX}" y1="${y1}" x2="${SX}" y2="${y2}"
+                  stroke="${color}" stroke-width="2.5" ${da}/>`;
+  }
+
+  /* Helper: sub-stop (smaller, indented slightly) */
+  function subStop(y, color, label, sub) {
+    return `<circle cx="${SX}" cy="${y}" r="4.5" fill="${color}"/>
+    <text x="${LX}" y="${y + 5}" font-size="13" fill="${color}" font-weight="600"
+          font-family="Noto Serif JP, serif">${label}</text>
+    ${sub ? `<text x="${LX}" y="${y + 19}" font-size="10" fill="#9a9a9a" font-family="Noto Sans TC, sans-serif">${sub}</text>` : ''}`;
   }
 
   return `
-<svg viewBox="0 0 320 825" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+<svg viewBox="0 0 320 950" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
 
   <!-- Background -->
-  <rect width="320" height="825" fill="#f4efe6"/>
+  <rect width="320" height="950" fill="#f4efe6"/>
 
-  <!-- Horizontal rules (washi paper) -->
-  ${Array.from({length:13}, (_,i) => `<line x1="14" y1="${65+i*58}" x2="306" y2="${65+i*58}" stroke="#ddd7ca" stroke-width="0.6" opacity="0.55"/>`).join('')}
+  <!-- Washi horizontal lines -->
+  ${Array.from({length:16}, (_,i) => `<line x1="14" y1="${60+i*56}" x2="306" y2="${60+i*56}" stroke="#ddd7ca" stroke-width="0.6" opacity="0.5"/>`).join('')}
 
   <!-- Thin left accent bar -->
-  <rect x="0" y="0" width="4" height="825" fill="${C[0]}" opacity="0.25"/>
+  <rect x="0" y="0" width="4" height="950" fill="${C[0]}" opacity="0.25"/>
 
   <!-- ══ TAIWAN (start) ══ -->
-  <text x="160" y="32" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
-  <text x="174" y="32" font-size="10.5" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場出發</text>
+  <text x="148" y="32" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
+  <text x="164" y="32" font-size="11" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場出發</text>
 
   <!-- Flight dashed line down -->
-  ${vline(SX, 38, 80, '#bbb', '4 3')}
-  <text x="${SX+9}" y="62" font-size="9.5" fill="#b0b0b0" font-family="Noto Sans TC, sans-serif">✈ 長榮航空 3h</text>
+  ${vline(38, 78, '#bbb', '4 3')}
+  <text x="${SX+10}" y="62" font-size="10" fill="#b0b0b0" font-family="Noto Sans TC, sans-serif">✈ 長榮航空 3h</text>
 
   <!-- ══ DAY 1 ══ -->
-  ${stop(SX, 93, C[0], 5.5, '小松空港', null, 'Day 1 · 7/31', 'small')}
-  ${vline(SX, 99, 158, C[0])}
+  ${stop(90, C[0], 5.5, '小松空港', null, 'Day 1 · 7/31', 'small')}
+  ${vline(96, 148, C[0])}
 
-  ${stop(SX, 170, C[0], 8, '金沢', '兼六園 · 近江町 · 東茶屋街 · 21美', 'Day 1', 'star')}
+  ${stop(160, C[0], 9, '金沢', '兼六園 · 近江町 · 東茶屋街 · 21美', 'Day 1', 'star')}
 
   <!-- ══ DAY 2 ══ -->
-  ${vline(SX, 182, 234, C[1], '5 3')}
+  ${vline(176, 218, C[1], '5 3')}
 
-  ${stop(SX, 246, C[1], 6, '富山', null, 'Day 2 · 8/1', 'normal')}
-  ${vline(SX, 252, 272, C[1])}
+  ${stop(230, C[1], 6, '富山', null, 'Day 2 · 8/1', 'normal')}
+  ${vline(238, 278, C[1])}
 
-  <!-- Branch line right: 富山 → 立山ルート -->
-  <line x1="${SX}" y1="272" x2="88" y2="295" stroke="${C[1]}" stroke-width="2" stroke-linecap="round"/>
-  <line x1="88" y1="295" x2="240" y2="295" stroke="${C[1]}" stroke-width="2"/>
+  ${subStop(290, C[1], '立山', '高原バス')}
+  ${vline(296, 334, C[1])}
 
-  <!-- 立山ルート stops (horizontal) -->
-  <circle cx="97"  cy="295" r="4" fill="${C[1]}"/>
-  <text x="97"  y="313" text-anchor="middle" font-size="9" fill="${C[1]}" font-weight="700" font-family="Noto Serif JP, serif">立山</text>
+  ${subStop(346, C[1], '室堂', '標高 2,450m')}
+  ${vline(352, 390, C[1])}
 
-  <circle cx="145" cy="295" r="4" fill="${C[1]}"/>
-  <text x="145" y="313" text-anchor="middle" font-size="9" fill="${C[1]}" font-weight="700" font-family="Noto Serif JP, serif">室堂</text>
+  ${subStop(402, C[1], '黒部ダム', 'ケーブルカー＋トンネルバス')}
+  ${vline(408, 444, C[1], '5 3')}
 
-  <circle cx="190" cy="295" r="4" fill="${C[1]}"/>
-  <text x="190" y="313" text-anchor="middle" font-size="8.5" fill="${C[1]}" font-weight="700" font-family="Noto Serif JP, serif">黒部ダム</text>
-
-  <circle cx="237" cy="295" r="4" fill="${C[1]}"/>
-  <text x="237" y="313" text-anchor="middle" font-size="9" fill="${C[1]}" font-weight="700" font-family="Noto Serif JP, serif">扇沢</text>
-
-  <!-- Return:扇沢 → 信濃大町 → 松本 (curve back to spine) -->
-  <path d="M237 299 Q237 340 130 356 Q90 362 ${SX} 367"
-        stroke="${C[1]}" stroke-width="1.8" fill="none" stroke-dasharray="5 3"/>
-  <text x="148" y="352" font-size="8.5" fill="#aaa" text-anchor="middle"
-        font-family="Noto Sans TC, sans-serif">→ 信濃大町</text>
-
-  ${stop(SX, 380, C[1], 6, '松本', null, null, 'normal')}
+  ${stop(456, C[1], 6, '松本', '信濃大町経由', null, 'normal')}
 
   <!-- ══ DAY 3 ══ -->
-  ${vline(SX, 386, 428, C[2], '5 3')}
+  ${vline(464, 502, C[2], '5 3')}
 
-  ${stop(SX, 440, C[2], 6, '上高地', '大正池 · 河童橋', 'Day 3 · 8/2', 'normal')}
-  ${vline(SX, 448, 482, C[2])}
+  ${stop(514, C[2], 6, '上高地', '大正池 · 河童橋', 'Day 3 · 8/2', 'normal')}
+  ${vline(522, 560, C[2])}
 
-  ${stop(SX, 494, C[2], 5, '新穂高', null, null, 'small')}
-  ${vline(SX, 499, 525, C[2])}
+  ${subStop(572, C[2], '新穂高', 'ロープウェイ')}
+  ${vline(578, 612, C[2])}
 
-  ${stop(SX, 537, C[2], 5, '高山', null, null, 'small')}
+  ${subStop(624, C[2], '高山', '古い町並')}
 
   <!-- ══ DAY 3→6: 名古屋 ══ -->
-  ${vline(SX, 543, 592, C[3], '5 3')}
+  ${vline(630, 668, C[3], '5 3')}
 
-  ${stop(SX, 606, C[3], 9, '名古屋', '名城 · 大須 · リニア館 · ジブリ', 'Day 3〜6', 'star')}
+  ${stop(682, C[3], 9, '名古屋', '名城 · 大須 · リニア館 · ジブリ', 'Day 3〜6', 'star')}
 
   <!-- ══ DAY 6 ══ -->
-  ${vline(SX, 620, 668, C[5])}
+  ${vline(698, 736, C[5])}
 
-  ${stop(SX, 680, C[5], 5.5, '中部国際空港', null, 'Day 6 · 8/5', 'small')}
+  ${stop(748, C[5], 5.5, '中部国際空港', null, 'Day 6 · 8/5', 'small')}
 
   <!-- Flight up -->
-  ${vline(SX, 686, 728, '#bbb', '4 3')}
-  <text x="${SX+9}" y="710" font-size="9.5" fill="#b0b0b0" font-family="Noto Sans TC, sans-serif">✈ 台灣虎航 2h</text>
+  ${vline(754, 796, '#bbb', '4 3')}
+  <text x="${SX+10}" y="778" font-size="10" fill="#b0b0b0" font-family="Noto Sans TC, sans-serif">✈ 台灣虎航 2h</text>
 
   <!-- ══ TAIWAN (end) ══ -->
-  <text x="160" y="762" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
-  <text x="174" y="762" font-size="10.5" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場抵達</text>
+  <text x="148" y="832" text-anchor="middle" font-size="22" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🇹🇼</text>
+  <text x="164" y="832" font-size="11" fill="#8a8a8a" font-family="Noto Sans TC, sans-serif">桃園國際機場抵達</text>
 
   <!-- Bottom padding -->
-  <rect x="0" y="800" width="320" height="25" fill="#f4efe6"/>
+  <rect x="0" y="858" width="320" height="92" fill="#f4efe6"/>
 </svg>`;
 }
 
@@ -443,7 +448,7 @@ function openWeather() {
 
 
 /* ══════════════════════════════════════════════════
-   SPOT MODAL
+   SPOT MODAL  —  mobile-optimized touch handling
 ══════════════════════════════════════════════════ */
 function openSpotModal(spotId, color) {
   const spot = SPOTS[spotId];
@@ -452,8 +457,12 @@ function openSpotModal(spotId, color) {
   const typeLabel = spot.type === 'food' ? '美食' :
                     spot.type === 'experience' ? '體驗' : '景點';
 
-  const imageHtml = spot.image ? `<img src="${spot.image}" style="width: 100%; border-radius: 8px; margin-bottom: 15px; object-fit: cover; max-height: 200px;" alt="${spot.nameZh || spot.nameJa}">` : '';
-  const hoursHtml = spot.hours ? `<div style="font-size: 13px; color: var(--ink-light); margin-bottom: 12px; display: flex; align-items: center;"><span style="margin-right: 6px;">🕒</span> ${spot.hours}</div>` : '';
+  const imageHtml = spot.image
+    ? `<img src="${spot.image}" style="width:100%;border-radius:8px;margin-bottom:15px;object-fit:cover;max-height:200px;" alt="${spot.nameZh || spot.nameJa}">`
+    : '';
+  const hoursHtml = spot.hours
+    ? `<div style="font-size:13px;color:var(--ink-light);margin-bottom:12px;display:flex;align-items:center;"><span style="margin-right:6px;">🕒</span> ${spot.hours}</div>`
+    : '';
   const formattedDesc = spot.description ? spot.description.replace(/\n\n/g, '<br><br>') : '';
 
   modalContent.innerHTML = `
@@ -474,6 +483,10 @@ function openSpotModal(spotId, color) {
       在 Google Maps 查看
     </button>`;
 
+  /* Reset scroll position when opening */
+  const modalScroll = document.getElementById('modal-scroll');
+  modalScroll.scrollTop = 0;
+
   spotModal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -481,39 +494,73 @@ function openSpotModal(spotId, color) {
 function closeModal() {
   spotModal.classList.remove('open');
   document.body.style.overflow = '';
-  document.getElementById('modal-sheet').style.transform = '';
+  const sheet = document.getElementById('modal-sheet');
+  sheet.style.transition = '';
+  sheet.style.transform  = '';
 }
 
 function openMap(encodedQuery) {
   window.open(`https://www.google.com/maps/search/?api=1&query=${encodedQuery}`, '_blank', 'noopener');
 }
 
-spotModal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+/* Backdrop click closes modal */
+document.getElementById('modal-backdrop').addEventListener('click', closeModal);
 
-/* Swipe-down to close modal */
+/* ── Swipe-down gesture to close modal ────────── */
 (function() {
-  let startY = 0, dragging = false;
-  const sheet = document.getElementById('modal-sheet');
+  const sheet     = document.getElementById('modal-sheet');
+  const modalScroll = document.getElementById('modal-scroll');
+  let startY = 0;
+  let startScrollTop = 0;
+  let dragging = false;
+  let swipeMode = false; // true = swiping sheet, false = scrolling content
 
   sheet.addEventListener('touchstart', e => {
-    startY = e.touches[0].clientY; dragging = true;
+    startY = e.touches[0].clientY;
+    startScrollTop = modalScroll.scrollTop;
+    dragging = true;
+    swipeMode = false;
+    sheet.style.transition = 'none';
   }, { passive: true });
+
   sheet.addEventListener('touchmove', e => {
     if (!dragging) return;
     const dy = e.touches[0].clientY - startY;
-    if (dy > 0) sheet.style.transform = `translateY(${dy}px)`;
-  }, { passive: true });
+
+    /* Only enter swipe mode if:
+       - moving downward AND
+       - scroll area is already at the top */
+    if (!swipeMode) {
+      if (dy > 8 && startScrollTop <= 0) {
+        swipeMode = true;
+      } else {
+        return; // let normal scroll happen
+      }
+    }
+
+    if (swipeMode && dy > 0) {
+      /* Prevent the scroll from happening when swiping the sheet down */
+      e.preventDefault();
+      sheet.style.transform = `translateY(${dy}px)`;
+    }
+  }, { passive: false });
+
   sheet.addEventListener('touchend', e => {
-    if (!dragging) return; dragging = false;
+    if (!dragging) return;
+    dragging = false;
     const dy = e.changedTouches[0].clientY - startY;
-    if (dy > 80) {
+
+    if (swipeMode && dy > 80) {
       closeModal();
     } else {
       sheet.style.transition = 'transform .3s ease';
       sheet.style.transform  = '';
-      setTimeout(() => sheet.style.transition = '', 300);
+      setTimeout(() => {
+        sheet.style.transition = '';
+      }, 300);
     }
-  });
+    swipeMode = false;
+  }, { passive: true });
 })();
 
 
@@ -521,4 +568,4 @@ spotModal.querySelector('.modal-backdrop').addEventListener('click', closeModal)
    BOOTSTRAP
 ══════════════════════════════════════════════════ */
 renderDayList();
-buildRouteMap(); /* pre-build map immediately so it's instant */
+buildRouteMap();

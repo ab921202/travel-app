@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="6日5夜 北陸・立山黒部・上高地・名古屋 完全攻略行程表">
 
   <!-- PWA / Add to Home Screen -->
@@ -23,61 +23,65 @@
 <body>
 
   <!-- ══════════════════════════════════════ -->
-  <!--  COVER                                -->
+  <!--  HOME (Cover + Map merged scroll)     -->
   <!-- ══════════════════════════════════════ -->
-  <div id="view-cover" class="view active">
-    <canvas id="sakura-canvas"></canvas>
-    <!-- Japanese decorative rings -->
-    <div class="cover-deco-ring cover-deco-ring--1"></div>
-    <div class="cover-deco-ring cover-deco-ring--2"></div>
-    <div class="cover-inner">
-      <div class="cover-year-tag">2025 · 夏の旅</div>
-      <div class="cover-title-block">
-        <h1 class="cover-main-title">北陸</h1>
-        <div class="cover-separator">
-          <span class="sep-line"></span>
-          <span class="sep-diamond">◆</span>
-          <span class="sep-line"></span>
+  <div id="view-home" class="view active">
+
+    <!-- COVER section (full viewport height) -->
+    <div id="cover-section">
+      <canvas id="sakura-canvas"></canvas>
+      <!-- Japanese decorative rings -->
+      <div class="cover-deco-ring cover-deco-ring--1"></div>
+      <div class="cover-deco-ring cover-deco-ring--2"></div>
+      <div class="cover-inner">
+        <div class="cover-year-tag">2026 · 夏の旅</div>
+        <div class="cover-title-block">
+          <h1 class="cover-main-title">北陸</h1>
+          <div class="cover-separator">
+            <span class="sep-line"></span>
+            <span class="sep-diamond">◆</span>
+            <span class="sep-line"></span>
+          </div>
+          <h1 class="cover-main-title">名古屋</h1>
         </div>
-        <h1 class="cover-main-title">名古屋</h1>
+        <div class="cover-subtitle-list">
+          <span>立山黒部</span><span class="cover-dot">·</span>
+          <span>上高地</span><span class="cover-dot">·</span>
+          <span>金沢</span>
+        </div>
+        <div class="cover-dates">7月31日 〜 8月5日</div>
+        <div class="cover-meta">6日5夜 完全攻略</div>
+        <button id="start-btn" class="cover-start-btn" onclick="scrollToMap()">
+          <span>開始探索</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
-      <div class="cover-subtitle-list">
-        <span>立山黒部</span><span class="cover-dot">·</span>
-        <span>上高地</span><span class="cover-dot">·</span>
-        <span>金沢</span>
-      </div>
-      <div class="cover-dates">7月31日 〜 8月5日</div>
-      <div class="cover-meta">6日5夜 完全攻略</div>
-      <button id="start-btn" class="cover-start-btn" onclick="showMain()">
-        <span>開始探索</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <div class="cover-scroll-hint">↓ 向下滑動</div>
     </div>
-    <div class="cover-scroll-hint">↓</div>
-  </div>
+
+    <!-- Gradient transition bridge -->
+    <div class="cover-map-gradient"></div>
+
+    <!-- MAP section -->
+    <div id="map-section">
+      <div class="map-section-header">
+        <div class="header-title">旅程地図</div>
+        <div class="header-subtitle">7/31 台湾出発 → 8/5 帰国</div>
+      </div>
+      <div id="route-map-svg-container"></div>
+    </div>
+
+  </div><!-- /view-home -->
 
   <!-- ══════════════════════════════════════ -->
-  <!--  MAIN (Map ⇄ Itinerary tabs)          -->
+  <!--  MAIN (Itinerary tab only now)        -->
   <!-- ══════════════════════════════════════ -->
   <div id="view-main" class="view">
 
-    <!-- ── MAP TAB ── -->
-    <div id="tab-map" class="tab-pane active">
-      <div class="view-header plain-header">
-        <div class="header-text">
-          <div class="header-title">旅程地図</div>
-          <div class="header-subtitle">7/31 台湾出発 → 8/5 帰国</div>
-        </div>
-      </div>
-      <div id="route-map-scroll" class="route-map-scroll">
-        <div id="route-map-svg-container"></div>
-      </div>
-    </div>
-
     <!-- ── ITINERARY TAB ── -->
-    <div id="tab-itinerary" class="tab-pane">
+    <div id="tab-itinerary" class="tab-pane active">
       <div class="view-header plain-header">
         <div class="header-text">
           <div class="header-title">行程總覽</div>
@@ -91,7 +95,7 @@
 
     <!-- ── BOTTOM TAB BAR ── -->
     <nav class="tab-bar" role="navigation">
-      <button class="tab-bar-btn active" id="tabbtn-map" onclick="switchTab('map')">
+      <button class="tab-bar-btn active" id="tabbtn-map" onclick="showHome()">
         <!-- Map icon -->
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -101,7 +105,7 @@
         </svg>
         <span>地図</span>
       </button>
-      <button class="tab-bar-btn" id="tabbtn-itinerary" onclick="switchTab('itinerary')">
+      <button class="tab-bar-btn" id="tabbtn-itinerary" onclick="showItinerary()">
         <!-- Calendar icon -->
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -122,7 +126,7 @@
   <!-- ══════════════════════════════════════ -->
   <div id="view-day-detail" class="view">
     <div id="day-detail-header" class="view-header colored-header">
-      <button id="back-btn" class="back-btn" onclick="showMain()">
+      <button id="back-btn" class="back-btn" onclick="showItinerary()">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M13 4L7 10l6 6" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,10 +152,10 @@
   <!--  SPOT MODAL                           -->
   <!-- ══════════════════════════════════════ -->
   <div id="spot-modal" class="modal">
-    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-backdrop" id="modal-backdrop"></div>
     <div class="modal-sheet" id="modal-sheet">
       <div class="modal-handle-bar"></div>
-      <div class="modal-scroll">
+      <div class="modal-scroll" id="modal-scroll">
         <div id="modal-content" class="modal-content"></div>
       </div>
     </div>

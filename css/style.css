@@ -17,6 +17,8 @@
   --shadow-md:   0 6px 24px rgba(28,28,46,.13);
   --radius:      18px;
   --radius-sm:   10px;
+  --cover-bg-start: #0e1226;
+  --cover-bg-end:   #6a1424;
   --c-d1: #2c4a7c;
   --c-d2: #1e5f74;
   --c-d3: #546b2e;
@@ -33,30 +35,6 @@ html, body {
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-
-/* ══════════════════════════════════════════════════
-   SUBTLE JAPANESE BACKGROUND TEXTURE
-   (Very faint horizontal lines — 原稿用紙 feel)
-══════════════════════════════════════════════════ */
-.app-texture {
-  background-color: var(--washi);
-  background-image:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px, transparent 31px,
-      rgba(28, 28, 46, 0.035) 31px, rgba(28, 28, 46, 0.035) 32px
-    );
-}
-
-/* Fine diamond grid (very subtle, for map/list areas) */
-.app-texture-grid {
-  background-color: var(--washi);
-  background-image:
-    linear-gradient(rgba(28,28,46,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(28,28,46,.025) 1px, transparent 1px);
-  background-size: 40px 40px;
 }
 
 
@@ -79,13 +57,31 @@ html, body {
 
 
 /* ══════════════════════════════════════════════════
-   COVER
+   HOME VIEW (cover + map as one scrollable page)
 ══════════════════════════════════════════════════ */
-#view-cover {
+#view-home {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* Override flex-direction to let sections stack naturally */
+  display: block;
+  background: var(--cover-bg-start);
+}
+/* Hide scrollbar on the home scroll container */
+#view-home::-webkit-scrollbar { display: none; }
+
+
+/* ══════════════════════════════════════════════════
+   COVER SECTION
+══════════════════════════════════════════════════ */
+#cover-section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(160deg, #0e1226 0%, #1e2d5c 45%, #6a1424 100%);
+  display: flex;
   align-items: center;
   justify-content: center;
-  transform: none !important;
   overflow: hidden;
 }
 
@@ -115,18 +111,18 @@ html, body {
 }
 
 /* Small corner lines top-left and bottom-right */
-#view-cover::before, #view-cover::after {
+#cover-section::before, #cover-section::after {
   content: '';
   position: absolute;
   width: 80px; height: 80px;
   border-color: rgba(201,162,39,.22);
   border-style: solid;
 }
-#view-cover::before {
+#cover-section::before {
   top: 28px; left: 28px;
   border-width: 1.5px 0 0 1.5px;
 }
-#view-cover::after {
+#cover-section::after {
   bottom: 28px; right: 28px;
   border-width: 0 1.5px 1.5px 0;
 }
@@ -239,13 +235,72 @@ html, body {
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255,255,255,.3);
-  font-size: 18px;
+  color: rgba(255,255,255,.4);
+  font-size: 12px;
+  letter-spacing: .18em;
   animation: bounce 2.2s ease infinite;
+  white-space: nowrap;
 }
 @keyframes bounce {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50%       { transform: translateX(-50%) translateY(7px); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   GRADIENT BRIDGE  cover dark → washi beige
+══════════════════════════════════════════════════ */
+.cover-map-gradient {
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    #6a1424 0%,
+    #3d1020 20%,
+    #1e1030 45%,
+    #251828 70%,
+    var(--washi) 100%
+  );
+  margin-top: -1px; /* prevent hairline gap */
+}
+
+
+/* ══════════════════════════════════════════════════
+   MAP SECTION  (within home scroll)
+══════════════════════════════════════════════════ */
+#map-section {
+  background: var(--washi);
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+.map-section-header {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid rgba(28,28,46,.08);
+  position: relative;
+}
+.map-section-header::after {
+  content: '';
+  position: absolute;
+  left: 20px; right: 20px;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+}
+.map-section-header .header-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--ink);
+}
+.map-section-header .header-subtitle {
+  font-size: 11px;
+  color: var(--ink-light);
+  margin-top: 4px;
+  letter-spacing: .05em;
+}
+
+#route-map-svg-container {
+  padding: 8px 0 24px;
 }
 
 
@@ -257,7 +312,6 @@ html, body {
   background: var(--washi);
   border-bottom: 1px solid rgba(28,28,46,.08);
   flex-shrink: 0;
-  /* Japanese top accent line */
   position: relative;
 }
 .plain-header::after {
@@ -426,20 +480,6 @@ html, body {
 
 
 /* ══════════════════════════════════════════════════
-   ROUTE MAP VIEW
-══════════════════════════════════════════════════ */
-.route-map-scroll {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-#route-map-svg-container {
-  padding: 8px 0 24px;
-}
-
-
-/* ══════════════════════════════════════════════════
    DAY LIST
 ══════════════════════════════════════════════════ */
 .day-list-scroll {
@@ -476,7 +516,6 @@ html, body {
   display: flex;
   align-items: center;
   gap: 12px;
-  /* Subtle washi horizontal lines */
   background-image: repeating-linear-gradient(
     180deg, transparent 0px, transparent 23px,
     rgba(28,28,46,.03) 23px, rgba(28,28,46,.03) 24px
@@ -504,11 +543,6 @@ html, body {
   margin-top: 4px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.day-card-weather {
-  font-size: 9px;
-  color: #aaa;
-  margin-top: 3px;
-}
 .day-card-arrow { color: #ccc; font-size: 20px; flex-shrink: 0; }
 
 
@@ -521,7 +555,6 @@ html, body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding: 20px 16px;
-  /* Subtle lines */
   background-image: repeating-linear-gradient(
     180deg, transparent 0px, transparent 31px,
     rgba(28,28,46,.03) 31px, rgba(28,28,46,.03) 32px
@@ -666,7 +699,7 @@ html, body {
 
 
 /* ══════════════════════════════════════════════════
-   SPOT MODAL
+   SPOT MODAL  —  optimized for mobile touch
 ══════════════════════════════════════════════════ */
 .modal {
   position: fixed; inset: 0;
@@ -685,14 +718,16 @@ html, body {
 
 .modal-sheet {
   position: relative;
-  width: 100%; max-height: 88vh;
+  width: 100%;
+  /* Fixed height so it doesn't resize when scrolling */
+  height: 88vh;
+  max-height: 88vh;
   background: var(--washi);
   border-radius: 26px 26px 0 0;
   transform: translateY(100%);
   transition: transform .4s cubic-bezier(.25,.46,.45,.94);
   display: flex; flex-direction: column;
   overflow: hidden;
-  /* Subtle horizontal lines in modal */
   background-image: repeating-linear-gradient(
     180deg, transparent 0, transparent 31px,
     rgba(28,28,46,.03) 31px, rgba(28,28,46,.03) 32px
@@ -706,8 +741,20 @@ html, body {
   border-radius: 2px;
   margin: 14px auto 0;
   flex-shrink: 0;
+  /* Larger tap target for swipe-to-close gesture */
+  padding: 12px 0;
+  background-clip: content-box;
+  cursor: grab;
 }
-.modal-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
+
+/* Scroll area: this is the ONLY thing that scrolls inside modal */
+.modal-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  /* critical: prevent touch events on scroll from bubbling to backdrop */
+  overscroll-behavior: contain;
+}
 .modal-content { padding: 20px 22px 50px; }
 
 .modal-tag {
@@ -755,7 +802,6 @@ html, body {
 ══════════════════════════════════════════════════ */
 .day-list-scroll::-webkit-scrollbar,
 .day-timeline-scroll::-webkit-scrollbar,
-.route-map-scroll::-webkit-scrollbar,
 .modal-scroll::-webkit-scrollbar { display: none; }
 
 
