@@ -16,6 +16,7 @@ const dayList       = document.getElementById('day-list');
 const dayTimeline   = document.getElementById('day-timeline');
 const spotModal     = document.getElementById('spot-modal');
 const modalContent  = document.getElementById('modal-content');
+const mainTabBar    = document.getElementById('main-tab-bar');
 
 
 /* ══════════════════════════════════════════════════
@@ -77,6 +78,25 @@ const modalContent  = document.getElementById('modal-content');
    VIEW NAVIGATION
 ══════════════════════════════════════════════════ */
 
+/* Tab Bar Visibility Logic */
+function updateTabBarVisibility() {
+  if (viewDayDetail.classList.contains('active')) {
+    mainTabBar.classList.add('hide-tab-bar');
+    return;
+  }
+  if (viewHome.classList.contains('active')) {
+    if (viewHome.scrollTop > window.innerHeight * 0.4) {
+      mainTabBar.classList.remove('hide-tab-bar');
+    } else {
+      mainTabBar.classList.add('hide-tab-bar');
+    }
+  } else {
+    mainTabBar.classList.remove('hide-tab-bar');
+  }
+}
+
+viewHome.addEventListener('scroll', updateTabBarVisibility, { passive: true });
+
 /* Scroll to map section within the home view */
 function scrollToMap() {
   const mapSection = document.getElementById('map-section');
@@ -91,6 +111,7 @@ function showHome() {
   viewHome.classList.remove('prev');
   viewHome.classList.add('active');
   updateTabBar('map');
+  updateTabBarVisibility();
 }
 
 /* Show itinerary list view */
@@ -101,6 +122,7 @@ function showItinerary() {
   viewMain.classList.remove('prev');
   viewMain.classList.add('active');
   updateTabBar('itinerary');
+  updateTabBarVisibility();
 }
 
 /* Show day detail */
@@ -112,6 +134,7 @@ function showDayDetail(idx) {
   viewMain.classList.add('prev');
   viewMain.classList.remove('active');
   viewDayDetail.classList.add('active');
+  updateTabBarVisibility();
 }
 
 /* Back from day detail → restore itinerary list */
