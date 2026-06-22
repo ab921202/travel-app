@@ -450,26 +450,28 @@ html, body {
 
 .tab-bar {
   display: flex;
-  height: var(--tab-h);
-  background: rgba(255,255,255,.96);
-  border-top: 1px solid rgba(28,28,46,.09);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  flex-shrink: 0;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: 68px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 0 6px;
+  border-radius: 40px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .global-tab-bar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
   z-index: 10;
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s;
 }
 
 .hide-tab-bar {
-  transform: translateY(100%);
+  transform: translate(-50%, 150%) scale(0.9);
   opacity: 0;
   pointer-events: none;
 }
@@ -480,20 +482,29 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  background: none;
+  gap: 3px;
+  background: transparent;
   border: none;
-  color: var(--ink-light);
+  color: #9BA1A8;
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: 10.5px;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: .05em;
   cursor: pointer;
-  transition: color .2s;
-  padding-top: 6px;
+  border-radius: 30px;
+  margin: 6px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.tab-bar-btn.active { color: var(--c-d1); }
-.tab-bar-btn svg { transition: transform .2s; }
-.tab-bar-btn.active svg { transform: scale(1.08); }
+.tab-bar-btn.active { 
+  color: var(--c-d1); 
+  background: rgba(14, 55, 116, 0.06);
+}
+.tab-bar-btn svg { 
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+}
+.tab-bar-btn.active svg { 
+  transform: scale(1.15) translateY(-2px); 
+}
 
 
 /* ══════════════════════════════════════════════════
