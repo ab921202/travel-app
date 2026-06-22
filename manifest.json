@@ -1,0 +1,18 @@
+{
+  "name": "北陸・名古屋 旅行攻略",
+  "short_name": "日本旅程",
+  "description": "6日5夜 北陸・立山黒部・上高地・名古屋 完全攻略行程表",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4efe6",
+  "theme_color": "#1c1c2e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

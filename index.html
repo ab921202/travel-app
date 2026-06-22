@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="6日5夜 北陸・立山黒部・上高地・名古屋 完全攻略行程表">
+
+  <!-- PWA / Add to Home Screen -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="日本旅程">
+  <meta name="theme-color" content="#111428">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+
+  <title>北陸・名古屋 旅行攻略</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  COVER                                -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="view-cover" class="view active">
+    <canvas id="sakura-canvas"></canvas>
+    <!-- Japanese decorative rings -->
+    <div class="cover-deco-ring cover-deco-ring--1"></div>
+    <div class="cover-deco-ring cover-deco-ring--2"></div>
+    <div class="cover-inner">
+      <div class="cover-year-tag">2025 · 夏の旅</div>
+      <div class="cover-title-block">
+        <h1 class="cover-main-title">北陸</h1>
+        <div class="cover-separator">
+          <span class="sep-line"></span>
+          <span class="sep-diamond">◆</span>
+          <span class="sep-line"></span>
+        </div>
+        <h1 class="cover-main-title">名古屋</h1>
+      </div>
+      <div class="cover-subtitle-list">
+        <span>立山黒部</span><span class="cover-dot">·</span>
+        <span>上高地</span><span class="cover-dot">·</span>
+        <span>金沢</span>
+      </div>
+      <div class="cover-dates">7月31日 〜 8月5日</div>
+      <div class="cover-meta">6日5夜 完全攻略</div>
+      <button id="start-btn" class="cover-start-btn" onclick="showMain()">
+        <span>開始探索</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cover-scroll-hint">↓</div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  MAIN (Map ⇄ Itinerary tabs)          -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="view-main" class="view">
+
+    <!-- ── MAP TAB ── -->
+    <div id="tab-map" class="tab-pane active">
+      <div class="view-header plain-header">
+        <div class="header-text">
+          <div class="header-title">旅程地図</div>
+          <div class="header-subtitle">7/31 台湾出発 → 8/5 帰国</div>
+        </div>
+      </div>
+      <div id="route-map-scroll" class="route-map-scroll">
+        <div id="route-map-svg-container"></div>
+      </div>
+    </div>
+
+    <!-- ── ITINERARY TAB ── -->
+    <div id="tab-itinerary" class="tab-pane">
+      <div class="view-header plain-header">
+        <div class="header-text">
+          <div class="header-title">行程總覽</div>
+          <div class="header-subtitle">6日5夜 完全攻略</div>
+        </div>
+      </div>
+      <div class="day-list-scroll">
+        <div id="day-list" class="day-list"></div>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM TAB BAR ── -->
+    <nav class="tab-bar" role="navigation">
+      <button class="tab-bar-btn active" id="tabbtn-map" onclick="switchTab('map')">
+        <!-- Map icon -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+          <line x1="9" y1="3" x2="9" y2="18"/>
+          <line x1="15" y1="6" x2="15" y2="21"/>
+        </svg>
+        <span>地図</span>
+      </button>
+      <button class="tab-bar-btn" id="tabbtn-itinerary" onclick="switchTab('itinerary')">
+        <!-- Calendar icon -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="8" y1="14" x2="12" y2="14"/>
+          <line x1="8" y1="18" x2="16" y2="18"/>
+        </svg>
+        <span>行程</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  DAY DETAIL                           -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="view-day-detail" class="view">
+    <div id="day-detail-header" class="view-header colored-header">
+      <button id="back-btn" class="back-btn" onclick="showMain()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M13 4L7 10l6 6" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="header-info">
+        <div id="day-detail-label" class="header-day-label"></div>
+        <div id="day-detail-title" class="header-day-title"></div>
+        <div id="day-detail-location" class="header-day-location"></div>
+      </div>
+      <button id="weather-btn" class="weather-btn" onclick="openWeather()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+        </svg>
+        <span>天気</span>
+      </button>
+    </div>
+    <div id="day-timeline" class="day-timeline-scroll"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  SPOT MODAL                           -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="spot-modal" class="modal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-sheet" id="modal-sheet">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-scroll">
+        <div id="modal-content" class="modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
