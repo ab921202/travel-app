@@ -102,7 +102,7 @@ const DAYS = [
       { type: 'transport', icon: '🚆', titleJa: '名鉄ミュースカイ', desc: '名古屋駅 → 中部国際空港' },
       { type: 'attraction', icon: '🛫', titleJa: '中部国際空港 セントレア', titleZh: '中部國際機場', desc: '機場免稅店最後採購' },
       { type: 'food', icon: '🍤', titleJa: 'まるや本店 (ひつまぶし)', titleZh: '鰻魚飯三吃', desc: '機場內品嚐名古屋名物', spotId: 'hitsumabushi' },
-      { type: 'fixed', time: '13:00 – 15:10', icon: '✈️', titleJa: '中部国際空港 → 桃園国際空港', desc: '台灣虎航 搭乘固定班機' }
+      { type: 'fixed', time: '21:45 – 23:45', icon: '✈️', titleJa: '中部国際空港 → 桃園国際空港', desc: '台灣虎航 搭乘固定班機' }
     ]
   }
 ];
